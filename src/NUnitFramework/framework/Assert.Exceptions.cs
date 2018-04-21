@@ -41,25 +41,7 @@ namespace NUnit.Framework
         {
             Exception caughtException = null;
 
-#if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(code))
-            {
-                using (var region = AsyncInvocationRegion.Create(code))
-                {
-                    code();
-
-                    try
-                    {
-                        region.WaitForPendingOperationsToComplete(null);
-                    }
-                    catch (Exception e)
-                    {
-                        caughtException = e;
-                    }
-                }
-            }
-            else
-#endif
+            Guard.ArgumentNotAsyncVoid(code, nameof(code));
 
             using (new TestExecutionContext.IsolatedContext())
             {
